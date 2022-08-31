@@ -9,6 +9,7 @@ class ArticlesController < ApplicationController
   end
 
   def new
+    @article = Article.new
   end
 
   def create
@@ -16,10 +17,14 @@ class ArticlesController < ApplicationController
     @article = Article.new(params.require(:article).permit(:title, :description))
     # @article = Article.new(params[:article])
     # render plain: @article.inspect
-    @article.save
+    if @article.save
+      flash[:notice] = "Article was created successfully."
+      redirect_to article_path(@article)
+      # or
+      # redirect_to @article
+    else
+      render 'new'
+    end
 
-    redirect_to article_path(@article)
-    # or
-    # redirect_to @article
   end
 end
